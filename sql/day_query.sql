@@ -1,6 +1,5 @@
 WITH ALL_CASES AS (
     SELECT P.SOLAR_BILLING_ACCOUNT_NUMBER AS BILLING_ACCOUNT
-         , P.PROJECT_NAME
          , CASE
         -- ADD DEFAULT CASES
                WHEN C.RECORD_TYPE ILIKE '%DEFAULT%'
@@ -39,14 +38,19 @@ WITH ALL_CASES AS (
         -- ADD ERT CASES
                WHEN C.RECORD_TYPE ILIKE '%ESCALAT%'
                    AND C.EXECUTIVE_RESOLUTIONS_ACCEPTED IS NOT NULL
+                   AND C.STATUS ILIKE '%DISPUTE%'
+                   THEN 'LWST'
+               WHEN C.RECORD_TYPE ILIKE '%ESCALAT%'
+                   AND C.EXECUTIVE_RESOLUTIONS_ACCEPTED IS NOT NULL
                    AND C.STATUS NOT ILIKE '%CLOSE%'
-                   -- REMOVE ERT CASES
                    THEN 'CMLT'
+        -- REMOVE ERT CASES
                WHEN C.RECORD_TYPE ILIKE '%ESCALAT%'
                    AND C.EXECUTIVE_RESOLUTIONS_ACCEPTED IS NOT NULL
                    AND C.STATUS ILIKE '%CLOSE%'
                    THEN 'NONE'
         END                               AS NEW_ACCOUNT_CODE
+         , CURRENT_DATE                   AS DATE_REQUESTED
     FROM RPT.T_CASE AS C
              LEFT JOIN RPT.T_PROJECT AS P
                        ON P.PROJECT_ID = C.PROJECT_ID

@@ -13,6 +13,7 @@ def main():
     mail_to = ['robert.anderson@vivintsolar.com',
                # 'ryan.schield@vivintsolar.com',
                'tyler.anderson1@vivintsolar.com',
+               'Sera.Goodnight@genpact.com',
                'Elijah.Rhoads@genpact.com'
                ]
     mail_subject = 'Collection Code Changes, ' + file_date
